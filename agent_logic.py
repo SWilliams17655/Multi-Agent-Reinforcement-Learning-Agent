@@ -11,13 +11,13 @@ class Agent_Logic:
 
         self.learning_rate = 0.001
         self.learning_rate_decay = .98
-        self.state_size = 2
+        self.state_size = 38
         self.action_space = 8
         self.gamma = 0.98
         self.epsilon = 1.0
         self.epsilon_decay = .90
         self.epsilon_min = 0.08
-        self.train_set_size = 300
+        self.train_set_size = 1000
         self.memory = deque(maxlen=self.train_set_size)
         self.model = self.build_model()
         self.batch_size = 64
@@ -25,9 +25,9 @@ class Agent_Logic:
 
     # *********************************************************************************************************************
     def build_model(self):
-        num_hidden_layer_1 = 30
-        num_hidden_layer_2 = 40
-        num_hidden_layer_3 = 16
+        num_hidden_layer_1 = 10
+        num_hidden_layer_2 = 20
+        num_hidden_layer_3 = 10
 
         # Create a sequential model
         model = tf.keras.Sequential([
@@ -48,6 +48,7 @@ class Agent_Logic:
     # *********************************************************************************************************************
 
     def remember(self, state, action, reward, next_state):
+        # print(f"{state}, {action}, {reward}, {next_state}", flush=True )
         self.memory.append((state, action, reward, next_state))
 
     # *********************************************************************************************************************
