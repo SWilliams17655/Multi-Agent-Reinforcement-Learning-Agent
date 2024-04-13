@@ -1,74 +1,38 @@
-import gymnasium as gym
-from agent import Agent
-import seaborn as sns
-import matplotlib.pyplot as plt
+from environment import Environment
 
-env = gym.make("CartPole-v1")
+# ********************************
+# Loading the environment
+# ********************************
+valid_option = False
+load_new_terrain = False
+load_prior_agent = False
+env = []
 
-debug = False # Set to true to log debug features.
-num_episodes = 300
-max_steps = 300
-score = [] # Saves score during each iteration for graphing.
-agent = Agent()
+while not valid_option:
+    response = input("Create a new terrain map [y/n]: \n")
+    if response == 'y':
+        load_new_terrain = True
+        valid_option = True
+    elif response == 'n':
+        load_new_terrain = False
+        valid_option = True
+    else:
+        print("Invalid selection")
 
-answer = input("Would you like to load an agent? [y/n]")
-if answer == 'y' or answer == 'Y':
-    print("Loading agent")
-    agent.load("agent.h5")
-else:
-    print("Starting with untrained agent")
+valid_option = False
 
-answer = input("Would you like to train network? [y/n]")
-if answer == 'y' or answer == 'Y':
-    print("Beginning training process")
-    for e in range(num_episodes):
-        state, _ = env.reset()
-        done = False
-        step = 0
+while not valid_option:
+    response = input("Load prior trained agent [y/n]: \n")
+    if response == 'y':
+        load_prior_agent = True
+        valid_option = True
+    elif response == 'n':
+        load_new_agent = False
+        valid_option = True
+    else:
+        print("Invalid selection")
 
-        while not done and step < max_steps:
-            action = agent.get_action(state)
-            new_state, reward, done, _, _ = env.step(action)
-            if not done or step >= max_steps - 1: # If the pole falls before max_sets sets to -100
-                reward = reward
-            else:
-                reward = -100
 
-            if debug:
-                print(f"Step: {step}, State: {state}, Action: {action}, Reward: {reward}, New State: {new_state}, Done: {done}")
-
-            agent.remember(state, action, reward, new_state, done)  # Saves information in memory for training.
-            state = new_state
-            step += 1
-            agent.learn()  # Implements learning algorithm.
-
-        print(f"Episode: {e}, Number Steps: {step}, Epsilon: {agent.epsilon}")
-        score.append(step)
-
-    agent.save("agent.h5")
-
-    #  Graphs the learning progress
-    sns.set_style("darkgrid", {"axes.facecolor": ".9"})
-    sns.lineplot(data=score)
-    plt.xlabel("Training Episode")
-    plt.ylabel("Number of Steps Achieved")
-    plt.title("Deep Quality Network Learning Score")
-    plt.show()
-
-env = gym.make("CartPole-v1", render_mode="human")
-
-for e in range(num_episodes):
-    state, _ = env.reset()
-    done = False
-    step = 0
-    agent.epsilon = agent.epsilon_min  # Setting epsilon to min to demonstrate full learning
-    while not done and step < max_steps:
-        action = agent.get_action(state)
-        new_state, reward, done, _, _ = env.step(action)
-        if not done or step >= max_steps - 1:
-            reward = reward
-        else:
-            reward = -100
-
-        state = new_state
-        step += 1
+if __name__ == "__main__":
+    env = Environment(load_new_terrain=load_new_terrain, load_prior_agent=load_prior_agent, epsilon=.75)
+    env.show_display()
