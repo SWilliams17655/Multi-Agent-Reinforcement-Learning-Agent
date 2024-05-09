@@ -85,6 +85,9 @@ class Environment:
         for i in range(self.NUM_LOG_HUBS):
             x = random.randrange(self.EDGE_BUFFER, self.WIDTH - self.EDGE_BUFFER)
             y = random.randrange(self.EDGE_BUFFER, self.HEIGHT - self.EDGE_BUFFER)
+            while self.terrain[y, x] <= 0:
+                x = random.randrange(self.EDGE_BUFFER, self.WIDTH - self.EDGE_BUFFER)
+                y = random.randrange(self.EDGE_BUFFER, self.HEIGHT - self.EDGE_BUFFER)
             cur.execute("INSERT INTO logistics_hub (logistics_hub_id, location_x, location_y) VALUES (?, ?, ?)",
                         (i, x, y))
 
