@@ -1,57 +1,221 @@
-# Multi-Agent Reinforcement Learning (MARL) for Swarm Intelligence
-  
-As computer scientists and engineers in the field of artificial intelligence, much of the inspiration for different algorithms necessary to solve complex problems has been drawn from nature. Through centuries of evolution and learning, nature has developed its own catalog of algorithms to address complex and dynamic problems, ensuring each species’ ability to survive in an ever-changing environment against a breadth of threats. Drawing from this inspiration, concepts like neural networks, expert systems, and evolutionary algorithms have revolutionized how we address many challenges. This program seeks to dive deeper into one of those concepts, swarm intelligence. With the development of small and cheap processors using onboard radio communications, the potential of swarm intelligence has grown over the last five years and warrants more research and development. One of the biggest challenges to developing a swarm intelligent algorithm is the steps necessary to engineer the swarm’s emergent behavior and decision policy against the almost infinite combination of environmental variables. This program will seek to address that challenge by demonstrating how we can leverage reinforcement learning combined with a policy focused on exploration to train a swarm intelligent algorithm. 
+ <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+<a name="readme-top"></a>
 
-To accomplish this, we will first introduce the concepts of swarm intelligence outlining the general characteristics of a swarm, the problems a swarm is well suited to solve, and the challenges to developing those solutions. From there, we will introduce reinforcement learning focusing on Deep Q-Values Neural Networks. Finally, combining the two, we will introduce the concept of using  reinforcement learning to train a multi-agent swarm. Rather than hard coding an agent’s decision making, untrained agents are introduced to the environment allowing them to explore, learn from, and generate their own policy optimizing their behavior based on how they are rewarded for each action. Starting this process, in the next section, we will begin by diving into what swarm intelligent algorithms are and what types of problems they are well suited for.
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/github_username/repo_name">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
-Swarm intelligence is not a new concept and has been researched for decades, but with the proliferation of small drones and low-cost processors is just now starting to show its full potential moving from the laboratory to the real-world. Beyond the jaw dropping synchronization and integration we see at sporting events and firework shows, swarm intelligent algorithms have a deeper advantage and are particularly valuable at solving search and optimization problems; optimizing a swarm’s behavior to find the global maxima or minima based on a pre-established criterion. There are a myriad of algorithms used to find maximum values, but algorithms like stochastic gradient descent (SGD) and others are susceptible to the local maximum problem. Imagine you are walking in the fog searching for the highest hill in a forest, searching blindly, you continue to take only steps that take you uphill and eventually you will find yourself at a point that any step in any direction takes you downhill; therefore, you have found the peak of a hill. What you don’t know is if that is just the highest point you have found (local maximum) or the highest point in the valley (global maximum). This is an example of the local maximum problem. 
+<h3 align="center">project_title</h3>
 
-Now imagine, you are in that same valley with friends each yelling how high they had climbed through the fog. As you converge on a local maximum your friend finds an even larger peak, so you move through the fog to the sound of their voice. Eventually, this process converges on a global maximum through a collaborative network. This example of particle swarm optimization (PSO) increases the likelihood agents will find the global maximum searching a larger area, communicating, then converging rather than agents becoming trapped in local maximums. A graphical example of this can be seen below.
-
-![Untitled video](https://github.com/SWilliams17655/Reinforcement-Learning-Agent/assets/114768010/2cc75c79-edc4-4ef4-9514-8029ca689bc6)
-
-Next, we will visit an example in nature, seeing a real-world application of swarm intelligence increasing survivability of a species. In the picture below, we see thousands of starling birds flocking. The complex synchronization of their flight is impressive, but even more so they are implementing a complex problem-solving process like the PSO discussed above, optimizing the flock’s behavior to search for food and avoid threats. Scientists have modeled the behavior of different swarms and generally there are certain attributes all swarms follow. First, there is no leader; if two flocks were to collide, the macro-scale behavior remains causing them to split and merge relatively seamlessly. Second, the agents have a local collaborative network and third, each agent follows a pre-established decision-making policy. These rules seem simplistic, but they are the true magic of a swarm intelligent algorithm. Combining the micro actions of thousands of birds, a macro behavior begins to emerge that increases the chance of survival for the entire flock. A swarm is not just a mass of agents flooding the environment, it is a cooperative intelligence that combined increases the chance of survival for all agents.
-
-![Picture5](https://github.com/SWilliams17655/Reinforcement-Learning-Agent/assets/114768010/62290a87-cb90-4a6c-8078-35c6f04b2744)
-
-The complex synchronization of their flight is impressive, but what is more important to understand is how that emergent behavior came about. The flock is implementing a complex problem-solving process, optimizing the flock’s behavior to search for food and avoid threats. When one bird detects a threat, the entire flock reacts and avoids that threat. When they detect food or a place to land, the entire flock follows. The flock accomplishes all of this without a leader by using a local and decentralized network of communication where each bird is only communicating with his neighbor.3 Instead of a leader, the swarm’s complex behavior is the result of the established rules each bird follows.4 Observing these behavior, scientists have determined certain attributes exist across all swarms: first, agents communicate, second there is no leader, and third agents follow a pre-established set of rules. This is somewhat of an oversimplification of the bird’s behavior, but in this case, the birds are following a more complex variation of a particle swarm optimization (PSO) algorithm allowing the birds to search a large area then rapidly concentrate on a global maximum; food. [^6]
-
-In his book Making Thinks Work, Solving Complex Problems in a Complex World, Yaneer Bar-Yam defines this relationship between the macro and the micro-scale as emergence or in this case emergent behavior.40 This concept of emergence is the true benefit and strength of any swarm intelligent algorithm because it allows the agent’s behavior at the micro-scale to shape and adapt the swarm’s behavior at the macro. In an effort to recreate this behavior, we can engineer a decision-making policy agents follow: 
-
-A(x)=H_v (x)*H_w (x)+C_v (x)*C_w (x)+T_v (x)*T_w (x)+R_v (x)*R_w (x)
-
-Cohesion Vector & Weight: H_v (x),H_w (x) Each agent averages the location of neighbors within its local communications network then moves towards the center of mass causing agents to remain cohesively consolidated into a singular mass. 
-
-Coherence Vector & Weight: C_v (x),C_w (x) Each agent averages the heading vector for all neighbors within its local communications network aligning its heading vector to those of local neighbors causing agents to align their movement. When a threat or food is detected by a neighbor, emergent behavior draws agents away from threats.
-
-Target Vector & Weight: T_v (x),T_w (x) This vector points in the direction of food. Using a sufficient weight T_w (x),  this vector draws agents towards food which is propagated through the swarm via emergent behavior.
-
-Threat Vector & Weight: R_v (x),R_w (x) This is vector points away from a threat detected by an agent. Due to the survival instinct it is likely having the highest weight R_w (x) and the actions of a single agent evading a threat will propagate through the swarm due to cohesion and coherence.
-
-![Untitled video](https://github.com/SWilliams17655/Reinforcement-Learning-Agent/assets/114768010/dabbea3e-e61e-4440-afa2-27092ed5fafe)
-
-Building these rules into an agent’s decision policy, we can generate similar behaviors and patterns to those seen by the starling birds above. When one bird detects a threat, the entire flock reacts and avoids that threat. The graphic below represents a swarm of agents using the decision policy above engineered by a human. The challenge with this approach is that a human must engineer this behavior anticipating the environments the swarm may face. By combining a finite state machine (FSM) with a local collaborative network and human engineered decision making policy you can achieve complex and adaptive behavior, but engineering that behavior remains a challenge bringing us to the next topic, reinforcement learning. 
-
-In Reinforcement Learning, an agent makes observations of the environment, feeds that observation into a decision policy taking an action, and in return it receives a reward. Although there are any number of approaches, we can use for the decision policy, in this case we will be implementing a deep Q-network (DQN). As shown in the figure below, an agent is only able to observe its local surroundings. Those surroundings are then fed as the input layer to a densely connected neural network (DNN). The input to that network is a reshaped array of the observations, but the output represents all the possible actions (i.e. up, down, left, or right). The value at each output represents the reward the agent anticipates if it takes that particular action. If it goes up, it expects a reward of 1 for getting closer to the goal, but if it goes down, it will get stuck and receive a -1 punishment.  From there, the agent takes the action that maximizes its reward.  
-
-This leads us to the question of how an agent learns to predict what reward it will receive. Leveraging an exploration policy, untrained agents are introduced to the environment and given the opportunity to explore. Epsilon ϵ represents the probability that an agent will take a random action rather than the action generated by its DQN. Early on, with a high Epsilon, agent takes random actions exploring the environment gathering good and bad rewards then feeding that information into a shared memory. After a period of exploration, that memory is fed into a learning process training the DNN to better predict reward based on current state and action.
-
-Agents must make multiple moves to achieve their goal so in many cases the reward is delayed causing a credit assignment problem. Therefore, we must develop a means for agents to understand future advantages or rewards. We need a construct that propagates reward and is represented as a discount factor or Gamma γ. Ultimately, the reward is a result, not just of the next move, which would be short sighted, but also of future advantage. A lower gamma reduces the impact of future reward creates algorithms that value immediate results higher and vice versa for higher gamma. Using this approach, we can create AI driven algorithms that learn to fly aircraft, create walking robots, and beat humans at complex games like Go. 
-
-![Picture6](https://github.com/SWilliams17655/Reinforcement-Learning-Agent/assets/114768010/9fb808ec-375c-4097-869d-711b1d117d83)
-
-The next section will seek to answer the question of whether the concept of reinforcement learning, can be combined with the three attributes of a swarm intelligent algorithm to create agents that generate, develop, and learn their own decision policy for swarm intelligence. To demonstrate this, the agents will be asked to solve an optimum path problem finding the shortest path through a randomly generated terrain. As shown in the figure below, agents must navigate through the terrain, randomly generated by Perlin Noise, finding a path towards their objective and back.
-
-The Design: As shown by the grid in the figure below, each agent starts with a sensor that can only sense its immediate surroundings. Feeding this sensor information into the observation array for our DQN, we can train an effective agent that navigates the terrain independently without any support from other agents, but it is susceptible to local maximums and dead ends. Improving on this design, we add the next element of a swarm intelligent algorithm, a collaborative network. Using communications to local neighbors, the agent extends its range receiving a fitness score from each neighbor where agents working in better terrain have a better fitness score. The full code associated with this example can be found on GitHub, but Figure X offers an example of this along with the code below which calculates the current observation or state of an agent being fed to the decision policy or DQN. We anticipate this introduction of a collaborative network will reduce the probability agents fall into local maximums or dead ends. 
-
-![Picture2](https://github.com/SWilliams17655/Reinforcement-Learning-Agent/assets/114768010/dde868af-1c8c-4dc6-a436-0601bc46b095)
+  <p align="center">
+    project_description
+    <br />
+    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    ·
+    <a href="https://github.com/github_username/repo_name/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    ·
+    <a href="https://github.com/github_username/repo_name/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+  </p>
+</div>
 
 
-Training the Decision Policy: Next we introduce the second element of swarm intelligence, the decision policy. In prior examples, humans engineered this policy, but here, we start with a policy of exploration using a high Epsilon. At each move, agents have a probability they will make their move based on the DQN decision policy or that they will just take a random action. In either case, the agent receives a reward at the end of that move then the state, action, and reward are all saved to memory. After agents collect enough training cases, the densely connected neural network is trained on that data improving its ability to anticipate the reward it will receive. Over time, as the agents are trained, the Epsilon is reduced shifting agents more-and-more to the decision policy they have developed. The code below shows how the densely connected neural network functions. Each agent feeds their state to the DQN which outputs the anticipated reward. The agent then selects the action that returns the maximum reward. 
-Agent Structure Code
-Agent Learning Code
-Figure X shows an accelerated view of the initial exploration policy and incremental learning. What you see in the video is untrained agents introduced to the environment then through incremental learning, they develop a decision policy navigating through the environment via the optimum path.
-At the end of each step, the agent is rewarded for its actions. In this case, the reward structure is based on the Euclidian distance between the desired objective and the agent. The more it moves towards the objective, the higher the reward. If the agent moves away, it is punished. Ultimately, just the same as training your pet in the real world, the reward structure we chose is the key to success. For example, if you reward an agent +2 for moving closer to a target -1 for moving away, it will learn that it can maximize its reward moving forwards and backwards repeatedly. At the same time, if you reward the same for reaching the target as you do for moving closer or have your Gamma set too low, the agent will likely spiral around the target incrementally getting closer. Ultimately, your reward structure is the key to training a reinforcement learning algorithm. As can be seen in the graphic below, with the appropriate decision policy, we can create a swarm intelligent algorithm trained through reinforcement learning.
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
 
-[^6]: My reference.
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
+Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+### Built With
+
+* [![Next][Next.js]][Next-url]
+* [![React][React.js]][React-url]
+* [![Vue][Vue.js]][Vue-url]
+* [![Angular][Angular.io]][Angular-url]
+* [![Svelte][Svelte.dev]][Svelte-url]
+* [![Laravel][Laravel.com]][Laravel-url]
+* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
+* [![JQuery][JQuery.com]][JQuery-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+This is an example of how you may give instructions on setting up your project locally.
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+This is an example of how to list things you need to use the software and how to install them.
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+### Installation
+
+1. Get a free API Key at [https://example.com](https://example.com)
+2. Clone the repo
+   ```sh
+   git clone https://github.com/github_username/repo_name.git
+   ```
+3. Install NPM packages
+   ```sh
+   npm install
+   ```
+4. Enter your API in `config.js`
+   ```js
+   const API_KEY = 'ENTER YOUR API';
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+
+_For more examples, please refer to the [Documentation](https://example.com)_
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- ROADMAP -->
+## Roadmap
+
+- [ ] Feature 1
+- [ ] Feature 2
+- [ ] Feature 3
+    - [ ] Nested Feature
+
+See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- CONTACT -->
+## Contact
+
+Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+
+Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+* []()
+* []()
+* []()
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
+[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
+[forks-url]: https://github.com/github_username/repo_name/network/members
+[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
+[stars-url]: https://github.com/github_username/repo_name/stargazers
+[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
+[issues-url]: https://github.com/github_username/repo_name/issues
+[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
+[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/linkedin_username
+[product-screenshot]: images/screenshot.png
+[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Next-url]: https://nextjs.org/
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
+[Vue-url]: https://vuejs.org/
+[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
+[Angular-url]: https://angular.io/
+[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
+[Svelte-url]: https://svelte.dev/
+[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
+[Laravel-url]: https://laravel.com
+[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com
+[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
+[JQuery-url]: https://jquery.com 
