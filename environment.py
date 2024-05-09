@@ -274,7 +274,10 @@ class Environment:
 
         for i, agent in enumerate(agents):
             self.agent_points[i].set_data(agent[AGENT_LOCATION_X], agent[AGENT_LOCATION_Y])
-
+            if agent[AGENT_REWARD] == 100:
+                self.agent_points[i].set_color("red")
+            else:
+                self.agent_points[i].set_color("white")
         return self.agent_points
 
     def show_display(self):
