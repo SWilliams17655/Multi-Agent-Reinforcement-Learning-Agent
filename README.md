@@ -4,16 +4,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/SWilliams17655/Reinforcement-Learning-Agent">
+    <img src="https://github.com/SWilliams17655/Reinforcement-Learning-Agent/assets/114768010/2cb113d1-f390-4a21-b5bc-5bd9b21e9dd9" alt="Logo" width="200" height="200">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">Multi-Agent Reinforcement Learning for Swarms</h3>
 
   <p align="center">
-    project_description
+    A research project looking at the applicability of reinforcement learning to train swarm intelligent algorithms.
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/SWilliams17655/Reinforcement-Learning-Agent"><strong>Explore the Code»</strong></a>
     <br />
     <br />
     <a href="https://github.com/github_username/repo_name">View Demo</a>
