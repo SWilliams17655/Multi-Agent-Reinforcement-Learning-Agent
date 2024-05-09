@@ -168,7 +168,7 @@ SOFTWARE.
 <!-- CONTACT -->
 ## Contact
 
-Sean Williams - <a href="www.linkedin.com/in/sean-wiki-williams">LinkedIn</a>
+Sean Williams - <a href="https://www.linkedin.com/in/sean-wiki-williams">LinkedIn</a>
 
 Project Link: <a href="https://github.com/SWilliams17655/Reinforcement-Learning-Agent">GitHub</a>
 
