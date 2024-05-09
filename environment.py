@@ -52,13 +52,14 @@ class Environment:
         self.MAX_VELOCITY = 20
         self.NUM_LOG_HUBS = 2
         self.DELIVERY_RANGE = self.MAX_VELOCITY * 2
-        self.SENSOR_RANGE = 20
+        self.SENSOR_RANGE = 40
         self.EDGE_BUFFER = self.SENSOR_RANGE
         self.terrain = []
 
         # Initializes the neural network
         self.input_array_size = 6 + (self.SENSOR_RANGE * 2) ** 2
         self.logic = Agent_Logic(self.input_array_size, epsilon)
+        print(f"Size of each state and input array to the neural network is: {self.input_array_size}")
 
         # Generates map using Perlin Noise.
         if load_new_terrain:
