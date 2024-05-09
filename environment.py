@@ -46,7 +46,6 @@ class Environment:
         @:param load_prior_agent: Boolean value representing whether function should load prior agent neural network.
         @:param epsilon: A starting epsilon value introducing randomness into each agent's actions.
         """
-        print("test")
         self.WIDTH = 2000
         self.HEIGHT = 1000
         self.NUM_AGENTS = 100
@@ -95,6 +94,10 @@ class Environment:
             x = random.randrange(self.EDGE_BUFFER, self.WIDTH - self.EDGE_BUFFER)
             y = random.randrange(self.EDGE_BUFFER, self.HEIGHT - self.EDGE_BUFFER)
 
+            #  Ensures agent is not randomly added to a location with un-navigable terrain.
+            while self.terrain[y, x] <= 0:
+                x = random.randrange(self.EDGE_BUFFER, self.WIDTH - self.EDGE_BUFFER)
+                y = random.randrange(self.EDGE_BUFFER, self.HEIGHT - self.EDGE_BUFFER)
             cur.execute(
                 'INSERT INTO agent (agent_id, location_x, location_y, destination_hub, reward) '
                 'VALUES (?, ?, ?, ?, ?)',
