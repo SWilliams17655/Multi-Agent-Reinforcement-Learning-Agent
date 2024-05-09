@@ -4,8 +4,15 @@ import numpy as np
 from keras.models import load_model
 from collections import deque
 
+STATE = 0
+ACTION = 1
+REWARD = 2
+NEXT_STATE = 3
+NEXT_STATE_2 = 4
 
 class Agent_Logic:
+
+
     def __init__(self, input_array_size, epsilon):
         print(f"\nThe following GPU processor is being used: {tf.config.list_physical_devices('GPU')}\n")
 
@@ -20,7 +27,7 @@ class Agent_Logic:
         self.train_set_size = 10000
         self.memory = deque(maxlen=self.train_set_size)
         self.model = self.build_model()
-        self.batch_size = 64
+        self.batch_size = 120
         self.num_epoch = 30
 
     def build_model(self):
@@ -31,8 +38,8 @@ class Agent_Logic:
 
         model = tf.keras.Sequential()
         model.add(tf.keras.Input(shape=(self.state_size,)))
-        model.add(tf.keras.layers.Dense(128, activation='relu', kernel_initializer='he_uniform'))
-        model.add(tf.keras.layers.Dense(128, activation='relu', kernel_initializer='he_uniform'))
+        model.add(tf.keras.layers.Dense(64, activation='relu', kernel_initializer='he_uniform'))
+        model.add(tf.keras.layers.Dense(64, activation='relu', kernel_initializer='he_uniform'))
         model.add(tf.keras.layers.Dense(self.action_space, activation='linear', kernel_initializer='he_uniform'))
 
         model.compile(loss="mse",
@@ -47,7 +54,6 @@ class Agent_Logic:
         """
         Description: Takes in agent data to build training set for later learning.
         """
-
         self.memory.append((state, action, reward, next_state))
 
     def get_q_values(self, states):
@@ -56,7 +62,6 @@ class Agent_Logic:
         @:param: states: a 2D array representing the states of all agents in the environment.
         @:return: An array of all agent q_values.
         """
-
         q_values = self.model.predict(states, verbose=0)
         return q_values
 
@@ -70,21 +75,23 @@ class Agent_Logic:
 
         training_set = random.sample(self.memory, int(len(self.memory) * 0.75))  # Randomly samples training set.
 
-        state = np.zeros((len(training_set), self.state_size))  # Creates a 2d numpy array to load training set.
-        next_state = np.zeros((len(training_set), self.state_size))
-        action, reward = [], []
+        states = np.zeros((len(training_set), self.state_size))  # Creates a 2d numpy array to load training set.
+        next_states = np.zeros((len(training_set), self.state_size))
+        next_states_2 = np.zeros((len(training_set), self.state_size))
+        actions = np.zeros(len(training_set))
+        rewards = np.zeros(len(training_set))
 
         for i in range(len(training_set)):  # Splits up memory to create training set
-            state[i] = training_set[i][0]
-            action.append(training_set[i][1])
-            reward.append(training_set[i][2])
-            next_state[i] = training_set[i][3]
+            states[i] = training_set[i][STATE]
+            actions[i] = training_set[i][ACTION]
+            rewards[i] = training_set[i][REWARD]
+            next_states[i] = training_set[i][NEXT_STATE]
 
-        target = self.model.predict(state)  # Makes prediction for current state
-        target_next = self.model.predict(next_state)  # Makes prediction for next state
+        target = self.model.predict(states)  # Makes prediction for current state
+        target_next = self.model.predict(next_states)  # Makes prediction for next state
 
         for i in range(len(training_set)):
-            target[i][action[i]] = reward[i] + self.gamma * (np.argmax(target_next[i]))
+            target[i][int(actions[i])] = rewards[i] + self.gamma * (np.argmax(target_next[i]))
 
         # Decreases epsilon to ensure less random decisions are made after each learning iteration
         if self.epsilon > self.epsilon_min:
@@ -94,7 +101,7 @@ class Agent_Logic:
         # Resets learning memory to load new training cases.
         self.memory = deque(maxlen=self.train_set_size)
 
-        self.model.fit(state, target, batch_size=self.batch_size, epochs=self.num_epoch, verbose=0)
+        self.model.fit(states, target, batch_size=self.batch_size, epochs=self.num_epoch, verbose=0)
         self.save("last_save.keras")
 
     def load(self, name):
