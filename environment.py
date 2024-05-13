@@ -46,7 +46,7 @@ class Environment:
         @:param load_prior_agent: Boolean value representing whether function should load prior agent neural network.
         @:param epsilon: A starting epsilon value introducing randomness into each agent's actions.
         """
-
+        print("test")
         self.WIDTH = 2000
         self.HEIGHT = 1000
         self.NUM_AGENTS = 100
