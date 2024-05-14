@@ -50,11 +50,12 @@ class Environment:
         self.HEIGHT = 1000
         self.NUM_AGENTS = 100
         self.MAX_VELOCITY = 20
-        self.NUM_LOG_HUBS = 2
+        self.NUM_LOG_HUBS = 3
         self.DELIVERY_RANGE = self.MAX_VELOCITY * 2
-        self.SENSOR_RANGE = 40
+        self.SENSOR_RANGE = 20
         self.EDGE_BUFFER = self.SENSOR_RANGE
         self.terrain = []
+        self.avg_fitness_array = []
 
         # Initializes the neural network
         self.input_array_size = 6 + (self.SENSOR_RANGE * 2) ** 2
@@ -179,6 +180,7 @@ class Environment:
                           f"WHERE agent_id={i}"
 
             cur.execute(command)
+        self.avg_fitness_array = np.append(self.avg_fitness_array, np.average(rewards))
 
         for i, state in enumerate(states):
             self.logic.remember(state, actions[i], rewards[i], new_states[i])
@@ -186,6 +188,10 @@ class Environment:
         #  Initiates learning from prior actions.
         if self.logic.epsilon >= self.logic.epsilon_min:
             self.logic.learn()
+
+        if len(self.avg_fitness_array) > 100:
+            print(f"\nAverage fitness score for last 100 cycles: {np.average(self.avg_fitness_array)}")
+            self.avg_fitness_array = []
 
     def execute_action(self, state, action):
         """
@@ -232,7 +238,7 @@ class Environment:
         new_distance = math.sqrt((agent_location_x - agent_destination_x) ** 2 +
                                  (agent_location_y - agent_destination_y) ** 2)
 
-        reward = int(previous_distance - new_distance)
+        reward = previous_distance - new_distance
 
         if new_distance < self.DELIVERY_RANGE:
             reward = 100

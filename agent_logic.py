@@ -20,10 +20,10 @@ class Agent_Logic:
         self.learning_rate_decay = .98
         self.state_size = input_array_size
         self.action_space = 8
-        self.gamma = 0.9
+        self.gamma = 0.6
         self.epsilon = epsilon
         self.epsilon_decay = .95
-        self.epsilon_min = 0.1
+        self.epsilon_min = 0.13
         self.train_set_size = 10000
         self.memory = deque(maxlen=self.train_set_size)
         self.model = self.build_model()
@@ -77,7 +77,6 @@ class Agent_Logic:
 
         states = np.zeros((len(training_set), self.state_size))  # Creates a 2d numpy array to load training set.
         next_states = np.zeros((len(training_set), self.state_size))
-        next_states_2 = np.zeros((len(training_set), self.state_size))
         actions = np.zeros(len(training_set))
         rewards = np.zeros(len(training_set))
 
