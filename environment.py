@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import sqlite3
 import math
-
+# print test
 AGENT_ID = 0
 AGENT_LOCATION_X = 1
 AGENT_LOCATION_Y = 2
