@@ -46,20 +46,21 @@ class Environment:
         @:param load_prior_agent: Boolean value representing whether function should load prior agent neural network.
         @:param epsilon: A starting epsilon value introducing randomness into each agent's actions.
         """
-        print("test")
         self.WIDTH = 2000
         self.HEIGHT = 1000
         self.NUM_AGENTS = 100
         self.MAX_VELOCITY = 20
-        self.NUM_LOG_HUBS = 2
+        self.NUM_LOG_HUBS = 3
         self.DELIVERY_RANGE = self.MAX_VELOCITY * 2
         self.SENSOR_RANGE = 20
         self.EDGE_BUFFER = self.SENSOR_RANGE
         self.terrain = []
+        self.avg_fitness_array = []
 
         # Initializes the neural network
         self.input_array_size = 6 + (self.SENSOR_RANGE * 2) ** 2
         self.logic = Agent_Logic(self.input_array_size, epsilon)
+        print(f"Size of each state and input array to the neural network is: {self.input_array_size}")
 
         # Generates map using Perlin Noise.
         if load_new_terrain:
@@ -86,6 +87,9 @@ class Environment:
         for i in range(self.NUM_LOG_HUBS):
             x = random.randrange(self.EDGE_BUFFER, self.WIDTH - self.EDGE_BUFFER)
             y = random.randrange(self.EDGE_BUFFER, self.HEIGHT - self.EDGE_BUFFER)
+            while self.terrain[y, x] <= 0:
+                x = random.randrange(self.EDGE_BUFFER, self.WIDTH - self.EDGE_BUFFER)
+                y = random.randrange(self.EDGE_BUFFER, self.HEIGHT - self.EDGE_BUFFER)
             cur.execute("INSERT INTO logistics_hub (logistics_hub_id, location_x, location_y) VALUES (?, ?, ?)",
                         (i, x, y))
 
@@ -95,6 +99,10 @@ class Environment:
             x = random.randrange(self.EDGE_BUFFER, self.WIDTH - self.EDGE_BUFFER)
             y = random.randrange(self.EDGE_BUFFER, self.HEIGHT - self.EDGE_BUFFER)
 
+            #  Ensures agent is not randomly added to a location with un-navigable terrain.
+            while self.terrain[y, x] <= 0:
+                x = random.randrange(self.EDGE_BUFFER, self.WIDTH - self.EDGE_BUFFER)
+                y = random.randrange(self.EDGE_BUFFER, self.HEIGHT - self.EDGE_BUFFER)
             cur.execute(
                 'INSERT INTO agent (agent_id, location_x, location_y, destination_hub, reward) '
                 'VALUES (?, ?, ?, ?, ?)',
@@ -172,6 +180,7 @@ class Environment:
                           f"WHERE agent_id={i}"
 
             cur.execute(command)
+        self.avg_fitness_array = np.append(self.avg_fitness_array, np.average(rewards))
 
         for i, state in enumerate(states):
             self.logic.remember(state, actions[i], rewards[i], new_states[i])
@@ -179,6 +188,10 @@ class Environment:
         #  Initiates learning from prior actions.
         if self.logic.epsilon >= self.logic.epsilon_min:
             self.logic.learn()
+
+        if len(self.avg_fitness_array) > 100:
+            print(f"\nAverage fitness score for last 100 cycles: {np.average(self.avg_fitness_array)}")
+            self.avg_fitness_array = []
 
     def execute_action(self, state, action):
         """
@@ -225,7 +238,7 @@ class Environment:
         new_distance = math.sqrt((agent_location_x - agent_destination_x) ** 2 +
                                  (agent_location_y - agent_destination_y) ** 2)
 
-        reward = int(previous_distance - new_distance)
+        reward = previous_distance - new_distance
 
         if new_distance < self.DELIVERY_RANGE:
             reward = 100
@@ -271,7 +284,10 @@ class Environment:
 
         for i, agent in enumerate(agents):
             self.agent_points[i].set_data(agent[AGENT_LOCATION_X], agent[AGENT_LOCATION_Y])
-
+            if agent[AGENT_REWARD] == 100:
+                self.agent_points[i].set_color("red")
+            else:
+                self.agent_points[i].set_color("white")
         return self.agent_points
 
     def show_display(self):
