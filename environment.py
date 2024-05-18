@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import sqlite3
 import math
-
+# Made change
 AGENT_ID = 0
 AGENT_LOCATION_X = 1
 AGENT_LOCATION_Y = 2
@@ -49,8 +49,8 @@ class Environment:
         self.WIDTH = 2000
         self.HEIGHT = 1000
         self.NUM_AGENTS = 100
-        self.MAX_VELOCITY = 20
-        self.NUM_LOG_HUBS = 3
+        self.MAX_VELOCITY = 5
+        self.NUM_LOG_HUBS = 20
         self.DELIVERY_RANGE = self.MAX_VELOCITY * 2
         self.SENSOR_RANGE = 20
         self.EDGE_BUFFER = self.SENSOR_RANGE
